@@ -1,0 +1,104 @@
+name: Build unsigned IPA
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 45
+    env:
+      XCODE_APP: /Applications/Xcode_16.4.app
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: |
+          sudo xcode-select -s "$XCODE_APP/Contents/Developer"
+          xcodebuild -version
+          xcodebuild -showsdks | grep -i iphoneos || true
+
+      - name: Install XcodeGen
+        run: |
+          brew install xcodegen
+          xcodegen --version
+
+      - name: Generate app icon
+        run: swift scripts/make_icon.swift ClipAlt/Assets.xcassets/AppIcon.appiconset/icon.png
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      - name: Build (no code signing)
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project ClipAlt.xcodeproj \
+            -scheme ClipAlt \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGN_ENTITLEMENTS="" \
+            build 2>&1 | tee xcodebuild.log | grep -E "error:|warning: .*deprecated|\*\* BUILD" || true
+          grep -q "\*\* BUILD SUCCEEDED \*\*" xcodebuild.log || { echo "---- last 200 lines ----"; tail -n 200 xcodebuild.log; exit 1; }
+
+      - name: Package IPA
+        run: |
+          set -euo pipefail
+          APP="build/Build/Products/Release-iphoneos/ClipAlt.app"
+          test -d "$APP"
+          echo "App contents:"; ls -la "$APP"
+          echo "PlugIns:"; ls -la "$APP/PlugIns"
+          test -d "$APP/PlugIns/ClipAltKeyboard.appex"
+          # Ad-hoc sign and embed the App Group entitlement so re-signing services
+          # (e.g. Signulous) can see that the app + keyboard share a container.
+          codesign -f -s - --entitlements Keyboard/ClipAltKeyboard.entitlements "$APP/PlugIns/ClipAltKeyboard.appex" || echo "appex ad-hoc sign skipped"
+          codesign -f -s - --entitlements ClipAlt/ClipAlt.entitlements "$APP" || echo "app ad-hoc sign skipped"
+          codesign -d --entitlements - "$APP" || true
+          rm -rf Payload && mkdir Payload
+          cp -R "$APP" Payload/
+          zip -qry ClipAlt.ipa Payload
+          ls -lh ClipAlt.ipa
+          /usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" "$APP/Info.plist"
+          /usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" "$APP/PlugIns/ClipAltKeyboard.appex/Info.plist"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ClipAlt-unsigned-ipa
+          path: ClipAlt.ipa
+          if-no-files-found: error
+
+      - name: Upload build log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: xcodebuild-log
+          path: xcodebuild.log
+          if-no-files-found: ignore
+
+      - name: Publish GitHub Release
+        if: github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: build-${{ github.run_number }}
+          name: ClipAlt build ${{ github.run_number }}
+          body: |
+            Unsigned ClipAlt.ipa (commit ${{ github.sha }}).
+            Upload it to Signulous to sign and install. See README for keyboard setup.
+          files: ClipAlt.ipa
+          make_latest: true
