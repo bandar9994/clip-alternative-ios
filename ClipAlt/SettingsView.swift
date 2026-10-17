@@ -1,11 +1,25 @@
 import SwiftUI
 import UIKit
+import CoreLocation
 
 struct SettingsView: View {
     @EnvironmentObject private var model: ClipListModel
     @Environment(\.dismiss) private var dismiss
     @AppStorage(ClipListModel.autoCaptureKey) private var autoCapture = true
     @State private var confirmClear = false
+    @ObservedObject private var background = BackgroundCaptureManager.shared
+    @State private var backgroundOn = UserDefaults.standard.bool(forKey: BackgroundCaptureManager.enabledKey)
+
+    private var locationStatusText: String {
+        switch background.authorizationStatus {
+        case .authorizedAlways: return "Always ✅ / دائمًا"
+        case .authorizedWhenInUse: return "While Using ⚠️ / أثناء الاستخدام"
+        case .denied: return "Denied ❌ / مرفوض"
+        case .restricted: return "Restricted ❌ / مقيّد"
+        case .notDetermined: return "Not asked yet / لم يُطلب"
+        @unknown default: return "Unknown"
+        }
+    }
 
     private var version: String {
         let v = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0"
@@ -22,6 +36,39 @@ struct SettingsView: View {
                     Text("Capture")
                 } footer: {
                     Text("iOS may ask “Allow Paste” each time. To stop the prompt: Settings › ClipAlt › Paste from Other Apps › Allow.\nلإيقاف رسالة السماح باللصق: الإعدادات › ClipAlt › اللصق من التطبيقات الأخرى › السماح.")
+                }
+
+                Section {
+                    Toggle("Background capture / الحفظ بالخلفية", isOn: $backgroundOn)
+                        .onChange(of: backgroundOn) { on in
+                            if on { background.enable() } else { background.disable() }
+                        }
+                    LabeledContent("Location permission", value: locationStatusText)
+                    LabeledContent("Background capture", value: background.isActive ? "Running ✅ / شغال" : "Off / متوقف")
+                    if let last = background.lastCaptureAt {
+                        LabeledContent("Last saved") { Text(last, style: .time) }
+                    }
+                    if !BackgroundCaptureManager.hasLocationBackgroundMode {
+                        Text("This install has no background location mode (the signing service removed it), so background capture can't run.")
+                            .font(.footnote).foregroundStyle(.red)
+                    }
+                    if backgroundOn && background.authorizationStatus != .authorizedAlways {
+                        Button {
+                            if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }
+                        } label: {
+                            Label("Set Location to “Always” / اجعل الموقع «دائمًا»", systemImage: "location")
+                        }
+                    }
+                } header: {
+                    Text("Background capture")
+                } footer: {
+                    Text("""
+                    ⚠️ Uses more battery. ClipAlt keeps a low-accuracy location session open only to stay running, and checks the clipboard every ~1.5 s. Your location is never saved or sent.
+                    For it to work: Settings › ClipAlt › Location › Always, and Paste from Other Apps › Allow.
+
+                    ⚠️ يستهلك بطارية أكثر. التطبيق يفتح الموقع بدقة منخفضة بس عشان يظل شغال بالخلفية، ويشيك على المنسوخ كل ثانية ونص تقريبًا. موقعك ما ينحفظ ولا ينرسل.
+                    عشان يشتغل: الإعدادات › ClipAlt › الموقع › دائمًا، واللصق من التطبيقات الأخرى › السماح.
+                    """)
                 }
 
                 Section("Enable the keyboard / تفعيل الكيبورد") {

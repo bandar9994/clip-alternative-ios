@@ -31,6 +31,11 @@ targets:
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         LSRequiresIPhoneOS: true
         UILaunchScreen: {}
+        UIBackgroundModes:
+          - location
+        NSLocationWhenInUseUsageDescription: "ClipAlt uses location only to keep running in the background so it can save what you copy. Your location is never stored or sent. يستخدم ClipAlt الموقع فقط عشان يظل شغال بالخلفية ويحفظ اللي تنسخه، وما يحفظ موقعك ولا يرسله."
+        NSLocationAlwaysAndWhenInUseUsageDescription: "Choose “Always” so ClipAlt can keep saving your clipboard in the background. Location is never stored or sent. اختر «دائمًا» عشان ClipAlt يقدر يحفظ المنسوخ وهو بالخلفية. موقعك ما ينحفظ ولا ينرسل."
+        NSLocationAlwaysUsageDescription: "ClipAlt uses location only to keep running in the background so it can save what you copy. يستخدم ClipAlt الموقع فقط عشان يظل شغال بالخلفية."
         UIApplicationSceneManifest:
           UIApplicationSupportsMultipleScenes: false
         UISupportedInterfaceOrientations:
