@@ -21,7 +21,7 @@ struct SaveClipboardIntent: AppIntent {
         description: "Text, link, rich text or image — usually the Clipboard from “Get Clipboard”.",
         supportedTypeIdentifiers: [
             "public.image", "public.url", "public.plain-text", "public.utf8-plain-text",
-            "public.text", "public.rtf", "public.html", "public.data"
+            "public.text", "public.rtf", "public.html", "public.content", "public.data", "public.item"
         ],
         inputConnectionBehavior: .connectToPreviousIntentResult
     )
