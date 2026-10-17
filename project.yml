@@ -1,0 +1,92 @@
+name: ClipAlt
+options:
+  bundleIdPrefix: com.bandar9994
+  deploymentTarget:
+    iOS: "16.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: "1"
+    TARGETED_DEVICE_FAMILY: "1,2"
+    CODE_SIGN_STYLE: Manual
+    DEVELOPMENT_TEAM: ""
+    ENABLE_BITCODE: NO
+targets:
+  ClipAlt:
+    type: application
+    platform: iOS
+    sources:
+      - path: ClipAlt
+      - path: Shared
+    dependencies:
+      - target: ClipAltKeyboard
+        embed: true
+    info:
+      path: ClipAlt/Info.plist
+      properties:
+        CFBundleDisplayName: ClipAlt
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        LSRequiresIPhoneOS: true
+        UILaunchScreen: {}
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+    entitlements:
+      path: ClipAlt/ClipAlt.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.bandar9994.clipalt
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.bandar9994.clipalt
+        PRODUCT_NAME: ClipAlt
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        GENERATE_INFOPLIST_FILE: NO
+  ClipAltKeyboard:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: Keyboard
+      - path: Shared
+    info:
+      path: Keyboard/Info.plist
+      properties:
+        CFBundleDisplayName: ClipAlt
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.keyboard-service
+          NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).KeyboardViewController
+          NSExtensionAttributes:
+            IsASCIICapable: false
+            PrefersRightToLeft: false
+            PrimaryLanguage: mul
+            RequestsOpenAccess: true
+    entitlements:
+      path: Keyboard/ClipAltKeyboard.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.bandar9994.clipalt
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.bandar9994.clipalt.keyboard
+        PRODUCT_NAME: ClipAltKeyboard
+        APPLICATION_EXTENSION_API_ONLY: YES
+        GENERATE_INFOPLIST_FILE: NO
+schemes:
+  ClipAlt:
+    build:
+      targets:
+        ClipAlt: all
+        ClipAltKeyboard: all
+    archive:
+      config: Release
