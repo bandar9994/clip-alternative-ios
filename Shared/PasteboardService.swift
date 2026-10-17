@@ -72,7 +72,7 @@ enum PasteboardService {
             }
             if !pb.hasStrings && !pb.hasURLs {
                 return CaptureOutcome(result: .failed, category: .readFailed,
-                                      detail: "image present but unreadable (paste denied / blocked in background?) \(summary)")
+                                      detail: "image present but unreadable (paste denied?) \(summary)")
             }
         }
 
@@ -97,7 +97,7 @@ enum PasteboardService {
 
         if pb.hasStrings || pb.hasURLs || pb.hasImages || !types.isEmpty {
             return CaptureOutcome(result: .failed, category: .readFailed,
-                                  detail: "content present but read returned nil — paste denied or background read blocked. \(summary)")
+                                  detail: "content present but read returned nil — paste denied (Settings › ClipAlt › Paste from Other Apps). \(summary)")
         }
         return CaptureOutcome(result: .empty, category: .skipped, detail: "pasteboard empty \(summary)")
     }

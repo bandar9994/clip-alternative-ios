@@ -2,8 +2,8 @@ import Foundation
 
 /// Lightweight diagnostics ring buffer shared by the app (and readable anywhere).
 /// Stored as JSON Lines in the App Group container, capped at `maxEvents`.
-/// Writes go through a serial queue + file coordinator so the background capture
-/// loop and the UI don't corrupt the file.
+/// Writes go through a serial queue + file coordinator so the app, keyboard, share
+/// extension and Shortcuts intent don't corrupt the file.
 final class CaptureLog {
     static let shared = CaptureLog()
     static let maxEvents = 200
@@ -16,9 +16,6 @@ final class CaptureLog {
         case skipped         // nothing worth saving
         case readFailed      // changeCount moved but we couldn't read contents
         case denied          // permission / access missing
-        case location        // location update tick(s)
-        case heartbeat       // periodic "still alive" with bg time + counters
-        case gap             // detected suspend/resume gap
         case info
     }
 
@@ -26,7 +23,7 @@ final class CaptureLog {
         var id = UUID()
         var date: Date = Date()
         var category: Category
-        var state: String       // "fg" / "bg" / "inactive"
+        var state: String       // "fg" / "keyboard" / "share" / "intent"
         var message: String
     }
 
