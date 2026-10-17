@@ -60,12 +60,19 @@ iOS عادةً ما يخلّي التطبيقات تشتغل بالخلفية. �
 The Settings screen shows the location permission and whether background capture is running.
 شاشة الإعدادات توضح حالة إذن الموقع وهل الحفظ بالخلفية شغال.
 
+**Capture log / سجل الحفظ** — ClipAlt › Settings › Background capture › *Capture log*. Shows the last 200 events
+(changeCount changes, what types were on the clipboard, saved / moved-to-top / read-failed, heartbeats every minute
+with background time remaining, and gaps when iOS suspended the app). Use the share button to send it.
+من الإعدادات › الحفظ بالخلفية › *سجل الحفظ*. يعرض آخر ٢٠٠ حدث، وتقدر تشاركه بزر المشاركة إذا فيه نسخ ما انحفظ.
+
 **Limitations / القيود**
 - ⚠️ Uses noticeably more battery. / يستهلك بطارية أكثر بشكل واضح.
 - Stops if you swipe ClipAlt away, after a reboot, in Low Power Mode, or if iOS decides to suspend it. Open the app again to resume.
   يوقف إذا سكّرت التطبيق من قائمة التطبيقات، أو بعد إعادة التشغيل، أو بوضع توفير الطاقة، أو إذا iOS قرر يوقفه. افتح التطبيق ويرجع يشتغل.
 - iOS may still show the “Allow Paste” prompt, or block clipboard reads in the background on some iOS versions. Setting *Paste from Other Apps* to *Allow* is required.
   iOS ممكن يظهر رسالة «السماح باللصق» أو يمنع قراءة المنسوخ بالخلفية في بعض الإصدارات، فلازم تخلي *اللصق من التطبيقات الأخرى* على *السماح*.
+- If you copy several things within about a second, only the last one can be saved — iOS keeps a single clipboard and no history.
+  إذا نسخت أكثر من شي خلال ثانية تقريبًا، ينحفظ الأخير بس، لأن iOS يحتفظ بآخر نسخة فقط.
 - With “While Using” instead of “Always”, iOS shows a blue location indicator while it runs in the background.
   إذا الموقع على «أثناء الاستخدام» بدل «دائمًا»، يظهر مؤشر الموقع الأزرق وهو بالخلفية.
 - The re-signing service (Signulous) must keep the app's background modes (`UIBackgroundModes = location`). If it strips them, Settings shows a red warning and background capture won't run.

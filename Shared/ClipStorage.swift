@@ -90,41 +90,60 @@ final class ClipStorage {
 
     // MARK: - Writing
 
+    enum AddOutcome {
+        case new
+        case movedToTop   // same content was already stored; bumped to the top
+        case rejected     // empty / could not encode
+    }
+
     @discardableResult
-    func addText(_ raw: String) -> Bool {
+    func addText(_ raw: String) -> Bool { insertText(raw) != .rejected }
+
+    @discardableResult
+    func addImage(_ image: UIImage) -> Bool { insertImage(image) != .rejected }
+
+    /// Re-copying something that already exists moves it to the top (never silently ignored).
+    func insertText(_ raw: String) -> AddOutcome {
         let trimmed = raw.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return false }
+        guard !trimmed.isEmpty else { return .rejected }
         let value = String(raw.prefix(Self.maxTextLength))
         let kind: ClipKind = Self.looksLikeURL(trimmed) ? .url : .text
         let stored = kind == .url ? trimmed : value
+        var outcome = AddOutcome.new
         update { items in
             if let idx = items.firstIndex(where: { $0.kind != .image && $0.text == stored }) {
-                items[idx].createdAt = Date()
+                var item = items.remove(at: idx)
+                item.createdAt = Date()
+                items.insert(item, at: 0)
+                outcome = .movedToTop
             } else {
                 items.insert(ClipItem(kind: kind, text: stored), at: 0)
             }
         }
-        return true
+        return outcome
     }
 
-    @discardableResult
-    func addImage(_ image: UIImage) -> Bool {
+    func insertImage(_ image: UIImage) -> AddOutcome {
         let scaled = Self.downscaled(image, maxDimension: 2048)
-        guard let data = scaled.jpegData(compressionQuality: 0.88) else { return false }
+        guard let data = scaled.jpegData(compressionQuality: 0.88) else { return .rejected }
         let digest = SHA256.hash(data: data).map { String(format: "%02x", $0) }.joined()
         let name = String(digest.prefix(32)) + ".jpg"
         let fileURL = imagesURL.appendingPathComponent(name)
         if !FileManager.default.fileExists(atPath: fileURL.path) {
-            do { try data.write(to: fileURL, options: .atomic) } catch { return false }
+            do { try data.write(to: fileURL, options: .atomic) } catch { return .rejected }
         }
+        var outcome = AddOutcome.new
         update { items in
             if let idx = items.firstIndex(where: { $0.imageFileName == name }) {
-                items[idx].createdAt = Date()
+                var item = items.remove(at: idx)
+                item.createdAt = Date()
+                items.insert(item, at: 0)
+                outcome = .movedToTop
             } else {
                 items.insert(ClipItem(kind: .image, imageFileName: name), at: 0)
             }
         }
-        return true
+        return outcome
     }
 
     func togglePin(_ id: UUID) {
