@@ -27,14 +27,17 @@ final class ClipListModel: ObservableObject {
     }
 
     func onBecameActive() {
-        if autoCapture, PasteboardService.captureIfChanged(storage: storage) == .saved {
-            show(NSLocalizedString("Saved from clipboard", comment: ""))
+        if autoCapture, let outcome = PasteboardService.captureIfChangedDetailed(storage: storage) {
+            CaptureLog.shared.log(outcome.category, "on open: " + outcome.detail, state: "fg")
+            if outcome.result == .saved { show(NSLocalizedString("Saved from clipboard", comment: "")) }
         }
         reload()
     }
 
     func saveClipboardNow() {
-        switch PasteboardService.capture(storage: storage) {
+        let outcome = PasteboardService.captureDetailed(storage: storage)
+        CaptureLog.shared.log(outcome.category, "manual save: " + outcome.detail, state: "fg")
+        switch outcome.result {
         case .saved: show("Saved from clipboard")
         case .empty, .unchanged: show("Clipboard is empty")
         case .failed: show("Could not save clipboard")

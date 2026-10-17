@@ -52,7 +52,9 @@ final class KeyboardModel: ObservableObject {
             flash("Turn on Full Access in Settings first")
             return
         }
-        switch PasteboardService.capture(storage: storage) {
+        let outcome = PasteboardService.captureDetailed(storage: storage)
+        CaptureLog.shared.log(outcome.category, "keyboard save: " + outcome.detail, state: "keyboard")
+        switch outcome.result {
         case .saved: flash("Saved")
         case .empty, .unchanged: flash("Clipboard is empty")
         case .failed: flash("Could not save")

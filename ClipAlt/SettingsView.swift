@@ -48,6 +48,11 @@ struct SettingsView: View {
                     if let last = background.lastCaptureAt {
                         LabeledContent("Last saved") { Text(last, style: .time) }
                     }
+                    NavigationLink {
+                        CaptureLogView()
+                    } label: {
+                        Label("Capture log / سجل الحفظ", systemImage: "list.bullet.rectangle")
+                    }
                     if !BackgroundCaptureManager.hasLocationBackgroundMode {
                         Text("This install has no background location mode (the signing service removed it), so background capture can't run.")
                             .font(.footnote).foregroundStyle(.red)
