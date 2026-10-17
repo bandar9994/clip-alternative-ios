@@ -75,6 +75,7 @@ jobs:
           ls -lh ClipAlt.ipa
           /usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" "$APP/Info.plist"
           /usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" "$APP/PlugIns/ClipAltKeyboard.appex/Info.plist"
+          echo "Background modes:"; /usr/libexec/PlistBuddy -c "Print :UIBackgroundModes" "$APP/Info.plist"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
