@@ -56,7 +56,7 @@ struct SaveClipboardIntent: AppIntent {
         }
 
         CaptureLog.shared.log(savedSomething ? .saved : .skipped, "shortcut input: " + notes.joined(separator: " "), state: "intent")
-        return .result(dialog: savedSomething ? "Saved to ClipAlt ✓" : "Nothing to save")
+        return .result(dialog: savedSomething ? IntentDialog("Saved to ClipAlt ✓") : IntentDialog("Nothing to save"))
     }
 }
 
