@@ -14,7 +14,7 @@ Text, links and images are saved locally — no account, no sync, no tracking.
 - Paste button that saves without the iOS “Allow Paste” prompt / زر لصق يحفظ بدون رسالة السماح
 - Search, pin, delete, share, tap to copy / بحث وتثبيت وحذف ومشاركة، واضغط للنسخ
 - Custom keyboard: shows recent clips and types them on tap / كيبورد يعرض آخر القصاصات ويكتبها بضغطة
-- Save from anywhere with a Shortcut, Back Tap, the Action Button or Siri / احفظ من أي مكان بالاختصارات أو النقر على الظهر أو زر الإجراء
+- Save from anywhere with a Shortcut (Get Clipboard → Save to ClipAlt), Back Tap, the Action Button or Siri / احفظ من أي مكان بالاختصارات أو النقر على الظهر أو زر الإجراء
 - Share extension: Share › ClipAlt saves text, links and images / إضافة مشاركة تحفظ النصوص والروابط والصور
 - Capture log for troubleshooting / سجل للحفظ يساعد في حل المشاكل
 - Battery-friendly: nothing runs in the background, no location use / ما يشتغل بالخلفية ولا يستخدم الموقع
@@ -43,15 +43,19 @@ To stop the “Allow Paste” prompt / لإيقاف رسالة «السماح ب
 ## Save without opening the app / حفظ بدون فتح التطبيق
 
 **Shortcuts, Back Tap & Action Button / الاختصارات والنقر على الظهر وزر الإجراء**
-1. Shortcuts app › **+** › add **Get Clipboard**, then **Save Clipboard to ClipAlt**, and pass *Clipboard* as Text (or Image).
-   Shortcuts reads the clipboard with its own permission, so ClipAlt shows no “Allow Paste” prompt.
-   تطبيق الاختصارات › **+** › أضف **الحصول على الحافظة** ثم **Save Clipboard to ClipAlt**، ومرّر الحافظة كنص أو صورة. بهالطريقة ما تطلع رسالة السماح.
-   (The action also works alone — then ClipAlt reads the clipboard itself. / ويشتغل لحاله بعد، بس ممكن تطلع رسالة السماح.)
+1. Make the shortcut / سوِّ الاختصار:
+   - Shortcuts app › **+** › Add Action › **Get Clipboard**. / تطبيق الاختصارات › **+** › إضافة إجراء › **الحصول على الحافظة**.
+   - Add Action › **Save to ClipAlt**, below it. Its **Content** must show **Clipboard** (tap it › Select Variable › Clipboard if empty).
+     إضافة إجراء › **Save to ClipAlt** تحته. لازم خانة **Content** تكون **الحافظة** (إذا فاضية: اضغط › اختر متغير › الحافظة).
+   - Name it, tap Done, and run it once from the Shortcuts app. / سمّه واضغط تم وشغّله مرة من تطبيق الاختصارات.
+   Shortcuts reads the clipboard with its own permission and passes it to ClipAlt (text, link, rich text or image), so ClipAlt shows no paste prompt.
+   If nothing is passed in, the action says “Nothing received — add Get Clipboard before this action” (it never reads the clipboard itself).
+   الاختصارات يقرأ الحافظة بإذنه ويوصلها لـ ClipAlt. وإذا ما وصل شي، يطلع لك «ما وصل شي — أضف «الحصول على الحافظة» قبل هذه الخطوة».
 2. **Back Tap:** Settings › Accessibility › Touch › Back Tap › Double/Triple Tap › choose the shortcut.
    **النقر على الظهر:** الإعدادات › تسهيلات الاستخدام › اللمس › النقر على الظهر › نقرتان أو ثلاث › اختر الاختصار.
 3. **Action Button** (iPhone 15 Pro and later): Settings › Action Button › Shortcut › choose it.
    **زر الإجراء** (آيفون ١٥ برو وأحدث): الإعدادات › زر الإجراء › اختصار › اختره.
-4. Siri: “Save clipboard in ClipAlt”.
+4. Siri: say the name of your shortcut (e.g. “Save to ClipAlt”). / سيري: قل اسم الاختصار.
 
 **Share sheet / قائمة المشاركة** — in any app tap **Share › ClipAlt** to save text, links or images (up to 10) directly.
 No clipboard access, so no prompt. If ClipAlt isn't listed, tap *More* / *Edit Actions* and enable it.

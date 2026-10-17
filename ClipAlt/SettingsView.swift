@@ -25,13 +25,17 @@ struct SettingsView: View {
                 }
 
                 Section("Save without opening the app / حفظ بدون فتح التطبيق") {
-                    step(1, "Shortcuts app › + › add “Get Clipboard”, then “Save Clipboard to ClipAlt” and pass Clipboard as Text (or Image). No paste prompt this way.",
-                         "تطبيق الاختصارات › + › أضف «الحصول على الحافظة» ثم «Save Clipboard to ClipAlt» ومرّر الحافظة كنص أو صورة. بهالطريقة ما تطلع رسالة السماح.")
-                    step(2, "Back Tap: Settings › Accessibility › Touch › Back Tap › Double Tap › choose that shortcut.",
+                    step(1, "Make the shortcut: Shortcuts app › + › Add Action › search “Get Clipboard” and add it.",
+                         "سوِّ الاختصار: تطبيق الاختصارات › + › إضافة إجراء › ابحث عن «الحصول على الحافظة» وأضفه.")
+                    step(2, "Add Action › search “Save to ClipAlt” and add it under Get Clipboard. Its Content must show “Clipboard” (tap the field › Select Variable › Clipboard if it's empty).",
+                         "إضافة إجراء › ابحث عن «Save to ClipAlt» وأضفه تحت «الحصول على الحافظة». لازم خانة Content تكون «الحافظة» (إذا فاضية اضغط عليها › اختر متغير › الحافظة).")
+                    step(3, "Name it “Save to ClipAlt” and tap Done. Run it once from the Shortcuts app and allow it if asked.",
+                         "سمّه «Save to ClipAlt» واضغط تم. شغّله مرة من تطبيق الاختصارات ووافق إذا طلب إذن.")
+                    step(4, "Back Tap: Settings › Accessibility › Touch › Back Tap › Double Tap › choose that shortcut.",
                          "النقر على الظهر: الإعدادات › تسهيلات الاستخدام › اللمس › النقر على الظهر › نقرتان › اختر الاختصار.")
-                    step(3, "Action Button (iPhone 15 Pro and later): Settings › Action Button › Shortcut › choose it.",
+                    step(5, "Action Button (iPhone 15 Pro and later): Settings › Action Button › Shortcut › choose it.",
                          "زر الإجراء (آيفون ١٥ برو وأحدث): الإعدادات › زر الإجراء › اختصار › اختره.")
-                    step(4, "Share sheet: in any app tap Share › ClipAlt to save text, links or images.",
+                    step(6, "Share sheet: in any app tap Share › ClipAlt to save text, links or images.",
                          "قائمة المشاركة: من أي تطبيق اضغط مشاركة › ClipAlt عشان تحفظ نص أو رابط أو صورة.")
                 }
 
