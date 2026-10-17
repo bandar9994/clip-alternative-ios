@@ -23,6 +23,8 @@ targets:
     dependencies:
       - target: ClipAltKeyboard
         embed: true
+      - target: ClipAltShare
+        embed: true
     info:
       path: ClipAlt/Info.plist
       properties:
@@ -31,11 +33,6 @@ targets:
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         LSRequiresIPhoneOS: true
         UILaunchScreen: {}
-        UIBackgroundModes:
-          - location
-        NSLocationWhenInUseUsageDescription: "ClipAlt uses location only to keep running in the background so it can save what you copy. Your location is never stored or sent. يستخدم ClipAlt الموقع فقط عشان يظل شغال بالخلفية ويحفظ اللي تنسخه، وما يحفظ موقعك ولا يرسله."
-        NSLocationAlwaysAndWhenInUseUsageDescription: "Choose “Always” so ClipAlt can keep saving your clipboard in the background. Location is never stored or sent. اختر «دائمًا» عشان ClipAlt يقدر يحفظ المنسوخ وهو بالخلفية. موقعك ما ينحفظ ولا ينرسل."
-        NSLocationAlwaysUsageDescription: "ClipAlt uses location only to keep running in the background so it can save what you copy. يستخدم ClipAlt الموقع فقط عشان يظل شغال بالخلفية."
         UIApplicationSceneManifest:
           UIApplicationSupportsMultipleScenes: false
         UISupportedInterfaceOrientations:
@@ -87,11 +84,43 @@ targets:
         PRODUCT_NAME: ClipAltKeyboard
         APPLICATION_EXTENSION_API_ONLY: YES
         GENERATE_INFOPLIST_FILE: NO
+  ClipAltShare:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: Share
+      - path: Shared
+    info:
+      path: Share/Info.plist
+      properties:
+        CFBundleDisplayName: ClipAlt
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.share-services
+          NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).ShareViewController
+          NSExtensionAttributes:
+            NSExtensionActivationRule:
+              NSExtensionActivationSupportsText: true
+              NSExtensionActivationSupportsWebURLWithMaxCount: 1
+              NSExtensionActivationSupportsImageWithMaxCount: 10
+    entitlements:
+      path: Share/ClipAltShare.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.bandar9994.clipalt
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.bandar9994.clipalt.share
+        PRODUCT_NAME: ClipAltShare
+        APPLICATION_EXTENSION_API_ONLY: YES
+        GENERATE_INFOPLIST_FILE: NO
 schemes:
   ClipAlt:
     build:
       targets:
         ClipAlt: all
         ClipAltKeyboard: all
+        ClipAltShare: all
     archive:
       config: Release

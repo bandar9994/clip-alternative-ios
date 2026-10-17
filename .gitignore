@@ -11,3 +11,5 @@ Payload/
 .DS_Store
 xcuserdata/
 DerivedData/
+Share/Info.plist
+Share/ClipAltShare.entitlements

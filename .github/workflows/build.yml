@@ -64,9 +64,11 @@ jobs:
           echo "App contents:"; ls -la "$APP"
           echo "PlugIns:"; ls -la "$APP/PlugIns"
           test -d "$APP/PlugIns/ClipAltKeyboard.appex"
+          test -d "$APP/PlugIns/ClipAltShare.appex"
           # Ad-hoc sign and embed the App Group entitlement so re-signing services
           # (e.g. Signulous) can see that the app + keyboard share a container.
           codesign -f -s - --entitlements Keyboard/ClipAltKeyboard.entitlements "$APP/PlugIns/ClipAltKeyboard.appex" || echo "appex ad-hoc sign skipped"
+          codesign -f -s - --entitlements Share/ClipAltShare.entitlements "$APP/PlugIns/ClipAltShare.appex" || echo "share appex ad-hoc sign skipped"
           codesign -f -s - --entitlements ClipAlt/ClipAlt.entitlements "$APP" || echo "app ad-hoc sign skipped"
           codesign -d --entitlements - "$APP" || true
           rm -rf Payload && mkdir Payload
@@ -75,7 +77,9 @@ jobs:
           ls -lh ClipAlt.ipa
           /usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" "$APP/Info.plist"
           /usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" "$APP/PlugIns/ClipAltKeyboard.appex/Info.plist"
-          echo "Background modes:"; /usr/libexec/PlistBuddy -c "Print :UIBackgroundModes" "$APP/Info.plist"
+          /usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" "$APP/PlugIns/ClipAltShare.appex/Info.plist"
+          if /usr/libexec/PlistBuddy -c "Print :UIBackgroundModes" "$APP/Info.plist" 2>/dev/null; then echo "unexpected UIBackgroundModes"; exit 1; fi
+          test -f "$APP/Metadata.appintents/extract.actionsdata" && echo "App Intents metadata present" || echo "warning: no App Intents metadata found"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -100,6 +104,6 @@ jobs:
           name: ClipAlt build ${{ github.run_number }}
           body: |
             Unsigned ClipAlt.ipa (commit ${{ github.sha }}).
-            Upload it to Signulous to sign and install. See README for keyboard setup.
+            Upload it to Signulous to sign and install. See README for keyboard, Shortcuts/Back Tap and Share setup.
           files: ClipAlt.ipa
           make_latest: true
