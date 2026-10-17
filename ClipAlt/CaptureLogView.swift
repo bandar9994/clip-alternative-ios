@@ -30,7 +30,7 @@ struct CaptureLogView: View {
                         Text(event.state)
                             .font(.caption2.weight(.bold))
                             .padding(.horizontal, 5).padding(.vertical, 1)
-                            .background(Capsule().fill(event.state == "bg" ? Color.purple.opacity(0.2) : Color.green.opacity(0.2)))
+                            .background(Capsule().fill(event.state == "fg" ? Color.green.opacity(0.2) : Color.purple.opacity(0.2)))
                         Text(event.category.rawValue)
                             .font(.caption.weight(.semibold))
                             .foregroundStyle(color(for: event.category))
@@ -74,9 +74,7 @@ struct CaptureLogView: View {
         switch c {
         case .saved, .movedToTop: return .green
         case .readFailed, .denied: return .red
-        case .gap: return .orange
         case .change: return .blue
-        case .heartbeat, .location: return .secondary
         default: return .primary
         }
     }

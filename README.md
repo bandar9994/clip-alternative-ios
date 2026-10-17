@@ -14,8 +14,10 @@ Text, links and images are saved locally — no account, no sync, no tracking.
 - Paste button that saves without the iOS “Allow Paste” prompt / زر لصق يحفظ بدون رسالة السماح
 - Search, pin, delete, share, tap to copy / بحث وتثبيت وحذف ومشاركة، واضغط للنسخ
 - Custom keyboard: shows recent clips and types them on tap / كيبورد يعرض آخر القصاصات ويكتبها بضغطة
-- **Optional background capture** (off by default) — keeps saving what you copy while ClipAlt is in the background / **حفظ بالخلفية اختياري** (مقفل افتراضيًا)
-- Battery-friendly by default: nothing runs in the background unless you turn on background capture / ما يشتغل بالخلفية إلا إذا فعّلت الحفظ بالخلفية
+- Save from anywhere with a Shortcut, Back Tap, the Action Button or Siri / احفظ من أي مكان بالاختصارات أو النقر على الظهر أو زر الإجراء
+- Share extension: Share › ClipAlt saves text, links and images / إضافة مشاركة تحفظ النصوص والروابط والصور
+- Capture log for troubleshooting / سجل للحفظ يساعد في حل المشاكل
+- Battery-friendly: nothing runs in the background, no location use / ما يشتغل بالخلفية ولا يستخدم الموقع
 
 ## Install with Signulous / التثبيت عن طريق Signulous
 
@@ -38,52 +40,34 @@ Text, links and images are saved locally — no account, no sync, no tracking.
 To stop the “Allow Paste” prompt / لإيقاف رسالة «السماح باللصق»:
 **Settings › ClipAlt › Paste from Other Apps › Allow** — **الإعدادات › ClipAlt › اللصق من التطبيقات الأخرى › السماح**
 
-## Background capture / الحفظ بالخلفية
+## Save without opening the app / حفظ بدون فتح التطبيق
 
-iOS normally doesn't let apps run (or read the clipboard) in the background. Like Riley Testut's *Clip*, ClipAlt can
-keep itself alive with a low-accuracy location session (≈3 km, never stored or sent) and check
-`UIPasteboard.changeCount` every ~1.5 s. It only reads the clipboard when the counter changes.
+**Shortcuts, Back Tap & Action Button / الاختصارات والنقر على الظهر وزر الإجراء**
+1. Shortcuts app › **+** › add **Get Clipboard**, then **Save Clipboard to ClipAlt**, and pass *Clipboard* as Text (or Image).
+   Shortcuts reads the clipboard with its own permission, so ClipAlt shows no “Allow Paste” prompt.
+   تطبيق الاختصارات › **+** › أضف **الحصول على الحافظة** ثم **Save Clipboard to ClipAlt**، ومرّر الحافظة كنص أو صورة. بهالطريقة ما تطلع رسالة السماح.
+   (The action also works alone — then ClipAlt reads the clipboard itself. / ويشتغل لحاله بعد، بس ممكن تطلع رسالة السماح.)
+2. **Back Tap:** Settings › Accessibility › Touch › Back Tap › Double/Triple Tap › choose the shortcut.
+   **النقر على الظهر:** الإعدادات › تسهيلات الاستخدام › اللمس › النقر على الظهر › نقرتان أو ثلاث › اختر الاختصار.
+3. **Action Button** (iPhone 15 Pro and later): Settings › Action Button › Shortcut › choose it.
+   **زر الإجراء** (آيفون ١٥ برو وأحدث): الإعدادات › زر الإجراء › اختصار › اختره.
+4. Siri: “Save clipboard in ClipAlt”.
 
-iOS عادةً ما يخلّي التطبيقات تشتغل بالخلفية. مثل تطبيق *Clip*، يقدر ClipAlt يظل شغال عن طريق جلسة موقع بدقة منخفضة جدًا
-(تقريبًا ٣ كم، وما ينحفظ الموقع ولا ينرسل)، ويشيك على المنسوخ كل ثانية ونص تقريبًا، ويقرأه بس إذا تغيّر.
+**Share sheet / قائمة المشاركة** — in any app tap **Share › ClipAlt** to save text, links or images (up to 10) directly.
+No clipboard access, so no prompt. If ClipAlt isn't listed, tap *More* / *Edit Actions* and enable it.
+من أي تطبيق اضغط **مشاركة › ClipAlt** عشان تحفظ نص أو رابط أو صور. إذا ما ظهر، اضغط *المزيد* وفعّله.
 
-**Turn it on / التفعيل**
-1. ClipAlt › ⚙︎ Settings › **Background capture** → On. Allow location when asked.
-   افتح ClipAlt › الإعدادات › **الحفظ بالخلفية** وفعّله، ووافق على طلب الموقع.
-2. iPhone Settings › ClipAlt › **Location › Always** (and turn **Precise Location** off).
-   إعدادات الآيفون › ClipAlt › **الموقع › دائمًا** (وطفّي **الموقع الدقيق**).
-3. iPhone Settings › ClipAlt › **Paste from Other Apps › Allow**.
-   إعدادات الآيفون › ClipAlt › **اللصق من التطبيقات الأخرى › السماح**.
-4. Open ClipAlt once after each restart of the phone (or after force-closing it), then you can leave it in the background.
-   افتح التطبيق مرة بعد كل إعادة تشغيل للجوال أو بعد ما تقفله من قائمة التطبيقات، وبعدها خلّه بالخلفية.
-
-The Settings screen shows the location permission and whether background capture is running.
-شاشة الإعدادات توضح حالة إذن الموقع وهل الحفظ بالخلفية شغال.
-
-**Capture log / سجل الحفظ** — ClipAlt › Settings › Background capture › *Capture log*. Shows the last 200 events
-(changeCount changes, what types were on the clipboard, saved / moved-to-top / read-failed, heartbeats every minute
-with background time remaining, and gaps when iOS suspended the app). Use the share button to send it.
-من الإعدادات › الحفظ بالخلفية › *سجل الحفظ*. يعرض آخر ٢٠٠ حدث، وتقدر تشاركه بزر المشاركة إذا فيه نسخ ما انحفظ.
-
-**Limitations / القيود**
-- ⚠️ Uses noticeably more battery. / يستهلك بطارية أكثر بشكل واضح.
-- Stops if you swipe ClipAlt away, after a reboot, in Low Power Mode, or if iOS decides to suspend it. Open the app again to resume.
-  يوقف إذا سكّرت التطبيق من قائمة التطبيقات، أو بعد إعادة التشغيل، أو بوضع توفير الطاقة، أو إذا iOS قرر يوقفه. افتح التطبيق ويرجع يشتغل.
-- iOS may still show the “Allow Paste” prompt, or block clipboard reads in the background on some iOS versions. Setting *Paste from Other Apps* to *Allow* is required.
-  iOS ممكن يظهر رسالة «السماح باللصق» أو يمنع قراءة المنسوخ بالخلفية في بعض الإصدارات، فلازم تخلي *اللصق من التطبيقات الأخرى* على *السماح*.
-- If you copy several things within about a second, only the last one can be saved — iOS keeps a single clipboard and no history.
-  إذا نسخت أكثر من شي خلال ثانية تقريبًا، ينحفظ الأخير بس، لأن iOS يحتفظ بآخر نسخة فقط.
-- With “While Using” instead of “Always”, iOS shows a blue location indicator while it runs in the background.
-  إذا الموقع على «أثناء الاستخدام» بدل «دائمًا»، يظهر مؤشر الموقع الأزرق وهو بالخلفية.
-- The re-signing service (Signulous) must keep the app's background modes (`UIBackgroundModes = location`). If it strips them, Settings shows a red warning and background capture won't run.
-  لازم Signulous يحافظ على أوضاع الخلفية في التطبيق، وإذا حذفها تظهر ملاحظة حمراء في الإعدادات وما يشتغل الحفظ بالخلفية.
-- This technique is not allowed on the App Store; it's meant for personal sideloaded installs.
-  هالطريقة ما تقبلها App Store، وهي للتثبيت الشخصي بس.
+**Capture log / سجل الحفظ** — ClipAlt › Settings › Diagnostics › *Capture log*: the last 200 save events (from opening
+the app, Paste button, keyboard, Share and Shortcuts) with what was on the clipboard and whether it was saved, a
+duplicate moved to top, or the read failed. Share it with the button at the top.
+من الإعدادات › Diagnostics › *سجل الحفظ*: آخر ٢٠٠ عملية حفظ، وتقدر تشاركه.
 
 ## Limitations / القيود
 
-- Without background capture, ClipAlt saves when you open it, when you tap Paste, or from the keyboard's *Save clipboard* button.
-  بدون الحفظ بالخلفية، الحفظ يصير لما تفتح التطبيق أو من زر اللصق أو من الكيبورد.
+- iOS doesn't let apps watch the clipboard in the background, and ClipAlt deliberately doesn't use battery-draining workarounds. It saves when you open it, tap Paste, use the keyboard's *Save clipboard*, Share › ClipAlt, or run the Shortcut (Back Tap / Action Button).
+  iOS ما يسمح بمراقبة النسخ بالخلفية، وClipAlt ما يستخدم حيل تستهلك البطارية. الحفظ يصير لما تفتحه، أو من زر اللصق، أو الكيبورد، أو المشاركة، أو الاختصار.
+- If you copy several things before saving, only the last one is on the clipboard — iOS keeps no history.
+  إذا نسخت أكثر من شي قبل الحفظ، الأخير بس هو اللي ينحفظ.
 - Keyboards can only type text. Tapping an image clip in the keyboard copies it so you can paste it.
   الكيبورد يكتب نصوص بس، والصور تنسخ عشان تلصقها.
 - Keyboards are not available in password fields and some secure apps (iOS rule).
